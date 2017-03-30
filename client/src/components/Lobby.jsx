@@ -62,6 +62,7 @@ class Lobby extends React.Component {
 
   render() {
     return (
+
       <div>
       <UsernameDisplay username={this.state.username}/>
         <Col id="lobby" sm={6} smOffset={3}>
@@ -74,6 +75,7 @@ class Lobby extends React.Component {
           {this.state.games && <GameList games={this.state.games} sendToGame={this.props.route.sendToGame}/>}
         </Col>
       </div>
+
     )
   }
 }
