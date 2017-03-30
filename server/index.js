@@ -109,19 +109,9 @@ app.get('/username', function(req, res) {
   res.status(200).send(user);
 });
 
-app.get('/logout', function(req, res) {
-  req.session.destroy(function (err) {
-    console.log('session destroyed')
-    res.send('session destroyed')
-  });
-})
-
-
-//don't need the app.options
 var server = app.listen(port, function() {
   console.log('App is listening on port: ', port);
 });
-//don't need the app.options
 
 //SOCKETS
 
