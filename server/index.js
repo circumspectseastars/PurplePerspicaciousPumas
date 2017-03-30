@@ -116,6 +116,10 @@ app.get('/logout', function(req, res) {
   });
 })
 
+app.get('/userprofile', function(req, res) {
+  console.log('get request from user profile received')
+  res.status(200).send({});
+});
 
 //don't need the app.options
 var server = app.listen(port, function() {
