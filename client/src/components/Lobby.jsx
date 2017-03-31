@@ -63,7 +63,6 @@ class Lobby extends React.Component {
   render() {
     return (
 
-
       <div>
       <UsernameDisplay username={this.state.username}/>
         <Col id="lobby" sm={6} smOffset={3}>
