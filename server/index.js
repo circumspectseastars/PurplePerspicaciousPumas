@@ -171,7 +171,7 @@ io.on('connection', (socket) => {
                 io.to(gameName).emit('start game', game);
               }
             };
-            let int = setInterval(onInt, 1000);
+            var int = setInterval(onInt, 1000);
           })
         });
       } else {
