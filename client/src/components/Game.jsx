@@ -62,7 +62,7 @@ class Game extends React.Component {
     socket.on('disconnectTimeOut', () => {
       // this function is related to the commented out function
       // in server/index.js
-      console.log('disconnectTimeOut')
+      console.log('disconnectTimeOut');
       this.props.route.sendToLobby.call(this, true);
     })
 
@@ -129,12 +129,14 @@ class Game extends React.Component {
   render() {
     return (
       <div id="game">
+
         {this.state.game && this.state.username && this.state.pregame.status === true && <Pregame game={this.state.game} user={this.state.username} pregame={this.state.pregame}/>}
+
 
         {this.state.game && this.state.username && this.state.game.gameStage === 'waiting' && this.state.pregame.status === null && <WaitingRoom game={this.state.game} user={this.state.username}/>}
 
 
-        {this.state.game && this.state.username && this.state.game.gameStage === 'playing' && this.state.pregame.status === false && <PlayingGame game={this.state.game} user={this.state.username} handleResponse={this.handleResponse} handlePromptSubmission={this.handlePromptSubmission} handleJudgeSelection={this.handleJudgeSelection} handleReadyToMoveOn={this.handleReadyToMoveOn}/>}
+        {this.state.game && this.state.username && this.state.game.gameStage === 'playing' && (this.state.pregame.status === false || this.state.pregame.status === null) && <PlayingGame game={this.state.game} user={this.state.username} handleResponse={this.handleResponse} handlePromptSubmission={this.handlePromptSubmission} handleJudgeSelection={this.handleJudgeSelection} handleReadyToMoveOn={this.handleReadyToMoveOn}/>}
 
         {this.state.game && this.state.username && this.state.game.gameStage === 'gameover' && <EndOfGame game={this.state.game} sendToLobby={this.props.route.sendToLobby}/>}
       </div>

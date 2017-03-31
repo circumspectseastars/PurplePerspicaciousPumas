@@ -197,32 +197,18 @@ io.on('connection', (socket) => {
         .then(function () {
           return queries.retrieveGameInstance(gameName)
           .then(function (game) {
-          // emit 'start game' event and send the game instance obj
-            // create a new socket here?
-              // countdown function here setTimeout and trigger a different state to render on the front end
-
-              var x = 7;
-              var onInt = function () {
-                io.to(gameName).emit('pregame', {'seconds': x, 'status': true});
-                x--;
-                if (x === 0) {
-                  clearInterval(int);
-                  io.to(gameName).emit('start game', game);
-                }
-              };
-
-              let int = setInterval(onInt, 1000);
-
-              // let x = 5;
-              // int = setInterval(function () {
-              //   io.to(gameName).emit('pregame', 1000)
-              //   x--;
-              //   if (x === 0) {
-              //     clearInterval(int);
-              //     io.to(gameName).emit('start game', game);
-
-
-              // io.to(gameName).emit('start game', game);
+            // emit 'pregame' event and send number of seconds and pregame status to client
+            var x = 7;
+            var onInt = function () {
+              io.to(gameName).emit('pregame', {'seconds': x, 'status': true});
+              x--;
+              if (x === 0) {
+                clearInterval(int);
+              // emit 'start game' event and send the game instance obj
+                io.to(gameName).emit('start game', game);
+              }
+            };
+            var int = setInterval(onInt, 1000);
           })
         });
       } else {
@@ -327,7 +313,7 @@ io.on('connection', (socket) => {
       throw error;
     })
   })
-  //
+
   socket.on('ready to move on', (data) => {
     var gameName = data.gameName;
     var username = data.username;
@@ -366,31 +352,46 @@ io.on('connection', (socket) => {
   // to see if the user has reconnected, but currently the count system
   // is not properly incrementing.
   socket.on('disconnect', (data) => {
-    // if (Rooms[Sockets[socket]]) {
-    //   Rooms[Sockets[socket]]--;
-    //   var timer = 60;
-    //   var disconnectTimeOut = function() {
-    //     setTimeout(function(){
-    //       if (timer === 0 && Rooms[Sockets[socket]] < 4) {
-    //         queries.setGameInstanceGameStageToGameOver(Sockets[socket])
-    //         .then(function(){
-    //             io.to(Sockets[socket]).emit('disconnectTimeOut');
-    //         })
-    //       } else {
-    //         if (Rooms[Sockets[socket]] < 4) {
-    //           timer = timer - 1;
-    //           disconnectTimeOut();
-    //         }
-    //       }
-    //     }, 1000);
-    //   }
-    //   queries.retrieveGameInstance(Sockets[socket])
-    //   .then(function(game) {
-    //     if (game.gameStage === 'playing') {
-    //       disconnectTimeOut();
-    //     }
-    //   });
+
+    // if (Room[Sockets[socket]]) {
+    //   var timer = 10;
+    //   var discconectTimeOut = function() {
+    //     setTimeout(function() {
+    //       if () {}
+    //     })
+    //   };
     // }
+    var countAtDisconnect = Rooms[Sockets[socket]];
+    var nameRoom = Sockets[socket];
+    if (Rooms[Sockets[socket]]) {
+      console.log('name is', Sockets[socket])
+      Rooms[Sockets[socket]]--;
+      var timer = 30;
+      var disconnectTimeOut = function() {
+        setTimeout(function(){
+          if (timer === 0 && countAtDisconnect !== Rooms[Sockets[socket]]) {
+            console.log('inside set timeout');
+            queries.setGameInstanceGameStageToGameOver(Sockets[socket])
+            .then(function(){
+                io.to(Sockets[socket]).emit('disconnectTimeOut');
+            })
+          } else {
+            if (countAtDisconnect !== Rooms[Sockets[socket]]) {
+              console.log('countAtDisconnect', countAtDisconnect)
+              console.log('rooms socket socket again', Rooms[Sockets[socket]])
+              timer = timer - 1;
+              disconnectTimeOut();
+            }
+          }
+        }, 1000);
+      }
+      queries.retrieveGameInstance(Sockets[socket])
+      .then(function(game) {
+        if (game.gameStage === 'playing') {
+          disconnectTimeOut();
+        }
+      });
+    }
 
     console.log('a user disconnected', data);
   });
